@@ -7,6 +7,7 @@ class FontSelectWidget extends StatelessWidget {
 
   String text = '가 나 다 라 마 바 사 아';
   double fontsize = 20.0;
+
   var fonWieigt = FontWeight.w700;
   var fontList = [
     'NanumPenScript',
@@ -27,7 +28,7 @@ class FontSelectWidget extends StatelessWidget {
   Widget slectfontList(context, font) {
     return GestureDetector(
       onTap: () {
-        _fontProvider?.selectFontFamilyUpdate(font);
+        _fontProvider.selectFontFamilyUpdate(font);
         Navigator.pop(context);
       },
       child: Container(

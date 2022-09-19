@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:polaroid/src/provider/font_provider.dart';
 import 'package:provider/provider.dart';
 
-class CardBackSelectColorWidget extends StatelessWidget {
+class FontSelecColortWidget extends StatelessWidget {
   late FontProvider _fontProvider;
 
   double fontsize = 20.0;
@@ -32,7 +32,7 @@ class CardBackSelectColorWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 15.0),
       child: GestureDetector(
         onTap: () {
-          _fontProvider?.selectBackgroundColorUpdate(color);
+          _fontProvider.selectFontColorUpdate(color);
           Navigator.pop(context);
         },
         child: Container(
@@ -66,7 +66,7 @@ class CardBackSelectColorWidget extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: 50,
             child: Text(
-              '사진 배경 색상을 수정해 보세요',
+              '폰트 색상을 수정해 보세요',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,

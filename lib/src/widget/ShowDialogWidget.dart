@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:polaroid/src/ui/DialogCardBakColorSelectWidget.dart';
-import 'package:polaroid/src/ui/DialogFontColorSelectWidget.dart';
-import 'package:polaroid/src/ui/DialogFontSelectWidget.dart';
+import 'package:polaroid/src/widget/card_back_color_select_widget.dart';
+import 'package:polaroid/src/widget/font_color_select_widget.dart';
+import 'package:polaroid/src/widget/font_select_widget.dart';
 
 class ShowDialogWidget extends StatelessWidget {
   final selectVal;
 
-  const ShowDialogWidget({this.selectVal});
+  const ShowDialogWidget({Key? key, this.selectVal}) : super(key: key);
+
+  Widget switchWidget() {
+    switch (selectVal) {
+      case 'font':
+        return FontSelectWidget();
+
+      case 'fontColor':
+        return FontSelecColortWidget();
+
+      case 'cardColor':
+        return CardBackSelectColorWidget();
+
+      default:
+        return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +50,18 @@ class ShowDialogWidget extends StatelessWidget {
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      width: 200,
-                      height: 30,
+                      width: 130,
+                      height: 35,
                       decoration: new BoxDecoration(
-                          color: Colors.indigo[400],
+                          color: Colors.blueGrey[800],
                           borderRadius:
-                              new BorderRadius.all(Radius.circular(10.0))),
+                              new BorderRadius.all(Radius.circular(5.0))),
                       child: Center(
                         child: Text(
-                          "닫기",
+                          "닫 기",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 17,
+                            fontSize: 15,
                             decoration: TextDecoration.none,
                           ),
                         ),

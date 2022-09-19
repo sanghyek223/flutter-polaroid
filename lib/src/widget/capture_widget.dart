@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:polaroid/src/provider/font_provider.dart';
 import 'package:provider/provider.dart';
 
-class CapturePolaroidWidget extends StatelessWidget {
+class CaptureWidget extends StatelessWidget {
+  const CaptureWidget({Key? key, this.defalutImage, this.image})
+      : super(key: key);
+
   final defalutImage;
   final image;
-
-  const CapturePolaroidWidget({this.defalutImage, this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class CapturePolaroidWidget extends StatelessWidget {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width + 100,
+      height: MediaQuery.of(context).size.width + 80,
       child: Padding(
         padding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
         child: Card(
@@ -31,7 +32,7 @@ class CapturePolaroidWidget extends StatelessWidget {
                     EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width - 50,
+                  height: MediaQuery.of(context).size.width - 45,
                   decoration: new BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     image: DecorationImage(
@@ -58,7 +59,7 @@ class CapturePolaroidWidget extends StatelessWidget {
                             var width = MediaQuery.of(context).size.width;
 
                             return Container(
-                              height: 160,
+                              height: 130,
                               width: width - 200,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,

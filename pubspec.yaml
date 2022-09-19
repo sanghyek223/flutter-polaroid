@@ -35,10 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   provider: ^6.0.3
-  image_picker: ^0.8.5+3
-  image_gallery_saver: ^1.7.1
-  flutter_secure_storage: ^6.0.0
   fluttertoast: ^8.0.9
+  flutter_secure_storage: ^4.2.0
+  permission_handler: ^9.2.0
 
 dev_dependencies:
   flutter_test:
@@ -120,6 +119,6 @@ flutter:
     - family: NanumBrushScript
       fonts:
         - asset: fonts/NanumBrushScript-Regular.ttf
-
+        
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

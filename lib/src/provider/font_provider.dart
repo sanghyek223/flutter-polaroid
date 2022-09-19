@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class FontProvider with ChangeNotifier {
-  final _storage = const FlutterSecureStorage();
+  final storage = new FlutterSecureStorage();
 
   double _fontSize = 19.0;
   String _fontFamily = 'CuteFont';
-
   var _fontColor = Colors.black;
   var _backgroudColor = Colors.white;
   var _polaroidTitle = '사진에 이름을 만들어주세요.';
 
   double get fontSize => _fontSize;
   String get fontFamily => _fontFamily;
-
   get fontColor => _fontColor;
   get backgroundtColor => _backgroudColor;
   get polaroidTitle => _polaroidTitle;
@@ -24,7 +22,7 @@ class FontProvider with ChangeNotifier {
   }
 
   selectFontFamilyUpdate(String font) async {
-    await _storage.write(key: "fontFamily", value: font);
+    await storage.write(key: "fontFamily", value: font);
     _fontFamily = font;
     notifyListeners();
   }
@@ -86,7 +84,7 @@ class FontProvider with ChangeNotifier {
       fontColor = "teal";
     }
 
-    await _storage.write(key: "fontColor", value: fontColor);
+    await storage.write(key: "fontColor", value: fontColor);
 
     _fontColor = color;
     notifyListeners();
@@ -149,20 +147,20 @@ class FontProvider with ChangeNotifier {
       backColor = "teal";
     }
 
-    await _storage.write(key: "backgroudColor", value: backColor);
+    await storage.write(key: "backgroudColor", value: backColor);
 
     _backgroudColor = color;
     notifyListeners();
   }
 
   polaroidTitleUpdate(title) async {
-    await _storage.write(key: "polaroidTitle", value: title);
+    await storage.write(key: "polaroidTitle", value: title);
     _polaroidTitle = title;
     notifyListeners();
   }
 
   reset() async {
-    await _storage.deleteAll();
+    await storage.deleteAll();
 
     _fontSize = 19.0;
     _fontFamily = 'CuteFont';
