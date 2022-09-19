@@ -29,15 +29,7 @@ class _LayoutState extends State<Layout> {
   late NavigationProvider _navigationProvider;
   late FontProvider _fontProvider;
 
-  BannerAd banner = BannerAd(
-    listener: BannerAdListener(
-      onAdFailedToLoad: (Ad ad, LoadAdError error) {},
-      onAdLoaded: (_) {},
-    ),
-    size: AdSize.banner,
-    adUnitId: 'ca-app-pub-4119771436378601/9227651271',
-    request: AdRequest(),
-  )..load();
+  BannerAd? banner;
 
   final storage = new FlutterSecureStorage();
 
@@ -62,6 +54,16 @@ class _LayoutState extends State<Layout> {
 
     permissionCheck();
     sotrageCheck();
+
+    banner = BannerAd(
+      size: AdSize.banner,
+      adUnitId: 'ca-app-pub-4119771436378601/9227651271',
+      listener: BannerAdListener(
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {},
+        onAdLoaded: (_) {},
+      ),
+      request: AdRequest(),
+    )..load();
   }
 
   void permissionCheck() async {
@@ -75,8 +77,8 @@ class _LayoutState extends State<Layout> {
   }
 
   void sotrageCheck() async {
-    var _fontColor;
-    var _backColor;
+    var _fontColor = Colors.black;
+    var _backColor = Colors.white;
 
     var font = await storage.read(key: "fontFamily");
     var fontColor = await storage.read(key: "fontColor");
@@ -150,9 +152,6 @@ class _LayoutState extends State<Layout> {
       case 'teal':
         _fontColor = Colors.teal;
         break;
-
-      default:
-        _fontColor = Colors.black;
     }
 
     switch (backColor) {
@@ -215,9 +214,6 @@ class _LayoutState extends State<Layout> {
       case 'teal':
         _backColor = Colors.teal;
         break;
-
-      default:
-        _backColor = Colors.white;
     }
 
     _fontProvider.selectFontColorUpdate(_fontColor);
@@ -346,9 +342,12 @@ class _LayoutState extends State<Layout> {
           child: ListView(
             shrinkWrap: true,
             children: [
-              AdWidget(
-                ad: banner,
+              Container(
+                child: Center(child: Text("왜안될까?")),
               ),
+              // AdWidget(
+              //   ad: banner!,
+              // ),
               RepaintBoundary(
                 key: _previewkey,
                 child: CaptureWidget(
