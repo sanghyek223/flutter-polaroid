@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polaroid/src/provider/font_provider.dart';
 import 'package:polaroid/src/provider/navigation_provider.dart';
@@ -234,7 +237,14 @@ class _LayoutState extends State<Layout> {
         break;
 
       case 2:
-        ToastMsg().showToastMSG('\n2\n');
+        var picker = ImagePicker();
+        var pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+        setState(() {
+          if (pickedFile != null) {
+            _image = File(pickedFile.path);
+          }
+        });
         break;
 
       case 3:
