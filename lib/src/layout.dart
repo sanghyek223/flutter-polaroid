@@ -1,9 +1,15 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polaroid/src/provider/font_provider.dart';
 import 'package:polaroid/src/provider/navigation_provider.dart';
@@ -23,6 +29,16 @@ class _LayoutState extends State<Layout> {
   late NavigationProvider _navigationProvider;
   late FontProvider _fontProvider;
 
+  BannerAd banner = BannerAd(
+    listener: BannerAdListener(
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {},
+      onAdLoaded: (_) {},
+    ),
+    size: AdSize.banner,
+    adUnitId: 'ca-app-pub-4119771436378601/9227651271',
+    request: AdRequest(),
+  )..load();
+
   final storage = new FlutterSecureStorage();
 
   List imageDefaultList = [
@@ -34,8 +50,10 @@ class _LayoutState extends State<Layout> {
     'town-828614_1920.jpg',
   ];
 
+  var _previewkey = new GlobalKey();
   var _defaultIamge;
   var _image;
+  var _ct;
 
   @override
   void initState() {
@@ -214,7 +232,7 @@ class _LayoutState extends State<Layout> {
     switch (index) {
       case 0:
         showDialog(
-          context: context,
+          context: _ct,
           barrierDismissible: false,
           builder: (BuildContext context) {
             return ShowDialogWidget(
@@ -226,7 +244,7 @@ class _LayoutState extends State<Layout> {
 
       case 1:
         showDialog(
-          context: context,
+          context: _ct,
           barrierDismissible: false,
           builder: (BuildContext context) {
             return ShowDialogWidget(
@@ -249,7 +267,7 @@ class _LayoutState extends State<Layout> {
 
       case 3:
         showDialog(
-          context: context,
+          context: _ct,
           barrierDismissible: false,
           builder: (BuildContext context) {
             return ShowDialogWidget(
@@ -260,20 +278,67 @@ class _LayoutState extends State<Layout> {
         break;
 
       case 4:
-        ToastMsg().showToastMSG('사진이 저장 되었습니다');
-        break;
+        var localTimestamp = (DateTime.now().millisecondsSinceEpoch + 9);
+        var renderObject = _previewkey.currentContext?.findRenderObject();
 
-      default:
-        {}
+        if (renderObject is RenderRepaintBoundary) {
+          final directory = (await getApplicationDocumentsDirectory()).path;
+          var boundary = renderObject;
+
+          ui.Image image = await boundary.toImage();
+
+          ByteData? byteData =
+              await image.toByteData(format: ui.ImageByteFormat.png);
+
+          Uint8List? pngBytes = byteData?.buffer.asUint8List();
+
+          File imgFile = new File('$directory/$localTimestamp-polaroid.jpg');
+
+          imgFile.writeAsBytes(pngBytes!).then((value) async {
+            ImageGallerySaver.saveFile(value.path); // 이미지 저장
+          });
+
+          ToastMsg().showToastMSG('사진이 저장 되었습니다');
+        }
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     _navigationProvider = Provider.of<NavigationProvider>(context);
+    _ct = context;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Text(
+          '폴라로이드 사진 만들기',
+          style: TextStyle(
+            fontFamily: 'CuteFont',
+            fontSize: 21,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _fontProvider.reset();
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => super.widget));
+            },
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -281,7 +346,11 @@ class _LayoutState extends State<Layout> {
           child: ListView(
             shrinkWrap: true,
             children: [
+              AdWidget(
+                ad: banner,
+              ),
               RepaintBoundary(
+                key: _previewkey,
                 child: CaptureWidget(
                   image: _image,
                   defalutImage: _defaultIamge,

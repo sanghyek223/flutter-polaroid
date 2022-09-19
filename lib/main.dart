@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:polaroid/src/layout.dart';
 import 'package:polaroid/src/provider/font_provider.dart';
 import 'package:polaroid/src/provider/navigation_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   runApp(
     MultiProvider(
       providers: [
