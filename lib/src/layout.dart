@@ -28,8 +28,7 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   late NavigationProvider _navigationProvider;
   late FontProvider _fontProvider;
-
-  BannerAd? banner;
+  late BannerAd banner;
 
   final storage = new FlutterSecureStorage();
 
@@ -50,20 +49,32 @@ class _LayoutState extends State<Layout> {
   @override
   void initState() {
     // TODO: implement initState
+
+    banner = BannerAd(
+      listener: BannerAdListener(
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('googleAd = $ad');
+          print('ERROR = $error');
+        },
+        onAdLoaded: (_) {
+          print('run');
+        },
+      ),
+      size: AdSize.banner,
+      adUnitId: 'ca-app-pub-4119771436378601/9227651271',
+      request: const AdRequest(),
+    )..load();
+
     _defaultIamge = (imageDefaultList..shuffle()).first;
 
     permissionCheck();
     sotrageCheck();
+  }
 
-    banner = BannerAd(
-      size: AdSize.banner,
-      adUnitId: 'ca-app-pub-4119771436378601/9227651271',
-      listener: BannerAdListener(
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {},
-        onAdLoaded: (_) {},
-      ),
-      request: AdRequest(),
-    )..load();
+  @override
+  void dispose() {
+    super.dispose();
+    banner.dispose();
   }
 
   void permissionCheck() async {
@@ -231,7 +242,7 @@ class _LayoutState extends State<Layout> {
           context: _ct,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return ShowDialogWidget(
+            return const ShowDialogWidget(
               selectVal: 'font',
             );
           },
@@ -243,7 +254,7 @@ class _LayoutState extends State<Layout> {
           context: _ct,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return ShowDialogWidget(
+            return const ShowDialogWidget(
               selectVal: 'fontColor',
             );
           },
@@ -266,7 +277,7 @@ class _LayoutState extends State<Layout> {
           context: _ct,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return ShowDialogWidget(
+            return const ShowDialogWidget(
               selectVal: 'cardColor',
             );
           },
@@ -288,7 +299,7 @@ class _LayoutState extends State<Layout> {
 
           Uint8List? pngBytes = byteData?.buffer.asUint8List();
 
-          File imgFile = new File('$directory/$localTimestamp-polaroid.jpg');
+          File imgFile = File('$directory/$localTimestamp-polaroid.jpg');
 
           imgFile.writeAsBytes(pngBytes!).then((value) async {
             ImageGallerySaver.saveFile(value.path); // 이미지 저장
@@ -306,57 +317,27 @@ class _LayoutState extends State<Layout> {
     _ct = context;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Text(
-          '폴라로이드 사진 만들기',
-          style: TextStyle(
-            fontFamily: 'CuteFont',
-            fontSize: 21,
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70), // change height of ads as you like
+        child: Container(
+          child: AdWidget(
+            ad: banner,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _fontProvider.reset();
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => super.widget));
-            },
-            icon: Icon(
-              Icons.refresh,
-              color: Colors.black,
-            ),
-          )
-        ],
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Center(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Container(
-                child: Center(child: Text("왜안될까?")),
+        child: ListView(
+          children: [
+            RepaintBoundary(
+              key: _previewkey,
+              child: CaptureWidget(
+                image: _image,
+                defalutImage: _defaultIamge,
               ),
-              // AdWidget(
-              //   ad: banner!,
-              // ),
-              RepaintBoundary(
-                key: _previewkey,
-                child: CaptureWidget(
-                  image: _image,
-                  defalutImage: _defaultIamge,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(

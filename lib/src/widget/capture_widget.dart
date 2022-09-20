@@ -74,9 +74,11 @@ class CaptureWidget extends StatelessWidget {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        FlatButton(
-                                          minWidth: 50,
-                                          textColor: Colors.indigo[400],
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            primary: Colors
+                                                .indigo[400], // foreground
+                                          ),
                                           child: Text(
                                             '닫기',
                                             style: TextStyle(
@@ -91,9 +93,11 @@ class CaptureWidget extends StatelessWidget {
                                         SizedBox(
                                           width: 10.0,
                                         ),
-                                        FlatButton(
-                                          minWidth: 50,
-                                          textColor: Colors.indigo[400],
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            primary: Colors
+                                                .indigo[400], // foreground
+                                          ),
                                           child: Text(
                                             '확인',
                                             style: TextStyle(
