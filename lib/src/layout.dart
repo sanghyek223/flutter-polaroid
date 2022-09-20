@@ -61,7 +61,7 @@ class _LayoutState extends State<Layout> {
         },
       ),
       size: AdSize.banner,
-      adUnitId: 'ca-app-pub-4119771436378601/9227651271',
+      adUnitId: '{광고 - id}',
       request: const AdRequest(),
     )..load();
 
